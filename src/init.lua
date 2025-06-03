@@ -211,6 +211,11 @@ export type ConversationMethods = {
   getChildren: (self: Conversation) -> {Dialogue};
   getSettings: (self: Conversation) -> ConversationSettings;
   setSettings: (self: Conversation, settings: ConversationSettings) -> ();
+
+  --[[
+    Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
+  ]]
+  findNextVerifiedDialogue: (self: Dialogue) -> Dialogue?;
 };
 
 export type Conversation = ConversationProperties & ConversationMethods;
