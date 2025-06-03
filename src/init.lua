@@ -308,7 +308,7 @@ export type DialogueMethods = {
   --[[
     Runs a user-defined function that is intended to run before a message is shown, or before a redirect.
   ]]
-  runInitializationAction: (self: Dialogue) -> ();
+  runInitializationAction: (self: Dialogue, client: Client) -> ();
 
   --[[
     Runs a user-defined function that is intended to run after a message is shown.
@@ -318,14 +318,14 @@ export type DialogueMethods = {
 
     This function is not intended for redirects.
   ]]
-  runCompletionAction: (self: Dialogue, requestedDialogue: Dialogue?) -> ();
+  runCompletionAction: (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
 
   --[[
     Runs a user-defined function that is intended to run after a specified timeout has passed.
     
     This function is not intended for redirects.
   ]]
-  runTimeoutAction: (self: Dialogue) -> ();
+  runTimeoutAction: (self: Dialogue, client: Client) -> ();
 
   --[[
     Gets the dialogue settings.
