@@ -215,7 +215,7 @@ export type ConversationMethods = {
   --[[
     Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
   ]]
-  findNextVerifiedDialogue: (self: Dialogue) -> Dialogue?;
+  findNextVerifiedDialogue: (self: Conversation) -> Dialogue?;
 };
 
 export type Conversation = ConversationProperties & ConversationMethods;
