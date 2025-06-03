@@ -10,20 +10,12 @@ local React = require(script.Parent.roblox_packages.react);
 -- Client
 export type ConstructorClientSettings = {
 
-  general: {
+  theme: {
 
     -- This is the default theme that will be used when talking with NPCs
-    theme: ModuleScript;
-
-    shouldEndConversationOnCharacterRemoval: boolean?;
+    moduleScript: ModuleScript;
 
   };
-  responses: {
-
-    -- Replace this with an audio ID that'll play every time a player selects a response. Replace with 0 to not play any sound.
-    clickSound: number?;
-
-  }?;
   keybinds: {
 
     --[[
@@ -42,18 +34,10 @@ export type ConstructorClientSettings = {
 
 export type ClientSettings = {
 
-  general: {
+  theme: {
 
     -- This is the default theme that will be used when talking with NPCs
-    theme: ModuleScript;
-
-    shouldEndConversationOnCharacterRemoval: boolean;
-
-  };
-  responses: {
-
-    -- Replace this with an audio ID that'll play every time a player selects a response. Replace with 0 to not play any sound.
-    clickSound: number?;
+    moduleScript: ModuleScript;
 
   };
   keybinds: {
@@ -77,8 +61,6 @@ export type OptionalClientSettings = {
 
     -- This is the default theme that will be used when talking with NPCs
     theme: ModuleScript?;
-
-    shouldEndConversationOnCharacterRemoval: boolean?;
 
   }?;
   responses: {
@@ -115,7 +97,7 @@ export type ClientMethods = {
 
 export type ClientEvents = {
   SettingsChanged: RBXScriptSignal<ClientSettings>;
-  ConversationChanged: RBXScriptSignal;
+  DialogueChanged: RBXScriptSignal;
 }
 
 export type Client = ClientMethods & ClientEvents;
@@ -131,71 +113,47 @@ export type ClickDetectorConversationSettings = {
   adornee: Instance?;
 }
 
-export type DistanceConversationSettings = {
-  -- Maximum magnitude between the NPC's HumanoidRootPart and the player's PrimaryPart before the conversation ends. Requires EndConversationIfOutOfDistance to be true.
-  maxConversationDistance: number?;
-  relativePart: BasePart?;
-}
-
 export type ConversationSettings = {
   clickDetector: ClickDetectorConversationSettings;
-  distance: DistanceConversationSettings;
-  general: GeneralConversationSettings;
+  theme: ThemeConversationSettings;
+  speaker: SpeakerConversationSettings;
   promptRegion: PromptRegionConversationSettings;
   proximityPrompt: ProximityPromptConversationSettings;
   speechBubble: SpeechBubbleConversationSettings;
 }
 
-export type GeneralConversationSettings = {
+export type SpeakerConversationSettings = {
   --[[
     The character's name. Themes may show this name to the player during the conversation.
   ]]
   name: string?;
+}
 
+export type ThemeConversationSettings = {
   --[[
     Change this to a theme you've added to the Themes folder in order to override default theme settings.
   ]]
-  theme: ModuleScript?;
-
-  -- If true, the player will freeze when the dialogue starts and will be unfrozen when the dialogue ends.
-  shouldFreezePlayer: boolean; 
+  moduleScript: ModuleScript?;
 }
 
 export type OptionalConversationSettings = {
-  general: {
+  speaker: {
     --[[
       The character's name. Themes may show this name to the player during the conversation.
     ]]
     name: string?;
-
+  }?;
+  theme: {
     --[[
       Change this to a theme you've added to the Themes folder in order to override default theme settings.
     ]]
-    theme: ModuleScript?;
-
-    -- If true, the player will freeze when the dialogue starts and will be unfrozen when the dialogue ends.
-    shouldFreezePlayer: boolean?; 
-  }?;
-  distance: {
-    -- Maximum magnitude between the NPC's HumanoidRootPart and the player's PrimaryPart before the conversation ends. Requires EndConversationIfOutOfDistance to be true.
-    maxConversationDistance: number?;
-    relativePart: BasePart?;
+    moduleScript: ModuleScript?;
   }?;
   typewriter: {
     -- The delay between each letter being typed. 
     characterDelaySeconds: number?; 
     -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
     canPlayerSkipDelay: boolean?; 
-  }?;
-  humanoid: {
-    -- If true, the NPC will look at the player during the conversation.
-    shouldLookAtPlayer: boolean?; 
-    -- The maximum angle of the NPC's neck on the X axis. Requires NPCLooksAtPlayerDuringDialogue to be true. 
-    neckRotationMaxX: number?;
-    -- The maximum angle of the NPC's neck on the Y axis. Requires NPCLooksAtPlayerDuringDialogue to be true. 
-    neckRotationMaxY: number?; 
-    -- The maximum angle of the NPC's neck on the Z axis. Requires NPCLooksAtPlayerDuringDialogue to be true.
-    neckRotationMaxZ: number?; 
   }?;
   promptRegion: {
     -- The conversation will automatically start when the player touches this part.
