@@ -103,13 +103,14 @@ export type OptionalClientSettings = {
 };
 
 export type ClientMethods = {
-  freezePlayer: (self: Client) -> ();
-  unfreezePlayer: (self: Client) -> ();
-  interact: (self: Client, conversation: Conversation) -> ();
+  cleanup: (self: Client) -> ();
+  getDialogue: (self: Client) -> Dialogue?;
+  setDialogue: (self: Client, newDialogue: Dialogue?) -> ();
+  renderDialogue: (self: Client) -> ();
+  continueDialogue: (self: Client) -> ();
   getSettings: (self: Client) -> ClientSettings;
   setSettings: (self: Client, newSettings: ClientSettings) -> ();
-  getConversation: (self: Client) -> Conversation?;
-  setConversation: (self: Client, newConversation: Conversation?) -> ();
+  setContinueDialogueFunction: (self: Client, continueDialogueFunction: (() -> ())?) -> ();
 }
 
 export type ClientEvents = {
