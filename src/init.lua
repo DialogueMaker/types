@@ -200,13 +200,6 @@ export type OptionalConversationSettings = {
     -- The conversation will automatically start when the player touches this part.
     basePart: BasePart?; 
   }?;
-  timeout: {
-    -- Set this to the amount of seconds you want to wait before closing the dialogue. 
-    -- [accepts number >= 0]
-    seconds: number?; 
-    -- If true, this causes dialogue to ignore the set timeout in order to wait for the player's response. 
-    shouldWaitForResponse: boolean?; 
-  }?;
   clickDetector: {
     -- If true, this automatically creates a ClickDetector inside of the NPC's model. 
     shouldAutoCreate: boolean?; 
@@ -321,13 +314,6 @@ export type DialogueMethods = {
   runCompletionAction: (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
 
   --[[
-    Runs a user-defined function that is intended to run after a specified timeout has passed.
-    
-    This function is not intended for redirects.
-  ]]
-  runTimeoutAction: (self: Dialogue, client: Client) -> ();
-
-  --[[
     Gets the dialogue settings.
   ]]
   getSettings: (self: Dialogue) -> DialogueSettings;
@@ -365,19 +351,12 @@ export type OptionalThemeDialogueSettings = {
 
 export type DialogueSettings = {
   theme: ThemeDialogueSettings;
-  timeout: TimeoutDialogueSettings;
   typewriter: TypewriterDialogueSettings;
 }
 
 export type OptionalDialogueSettings = {
   theme: OptionalThemeDialogueSettings?;
-  timeout: OptionalTimeoutDialogueSettings?;
   typewriter: OptionalTypewriterDialogueSettings?;
-}
-
-export type OptionalTimeoutDialogueSettings = {
-  -- Set this to the amount of seconds you want to wait before closing the dialogue.
-  seconds: number?;
 }
 
 export type OptionalTypewriterDialogueSettings = {
@@ -386,15 +365,6 @@ export type OptionalTypewriterDialogueSettings = {
   -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
   canPlayerSkipDelay: boolean?;
   shouldShowResponseWhileTyping: boolean?;
-}
-
-export type TimeoutDialogueSettings = {
-  
-  --[[
-    The number of seconds required before running the timeout action.
-  ]]
-  seconds: number?;
-
 }
 
 export type TypewriterDialogueSettings = {
@@ -475,9 +445,6 @@ export type ThemeProperties = {
   client: Client;
   conversation: Conversation;
   dialogue: Dialogue;
-  npc: Model;
-  onComplete: (newParent: Dialogue?) -> ();
-  onTimeout: () -> ();
 }
 
 export type TextComponentProperties = {
