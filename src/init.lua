@@ -241,6 +241,10 @@ export type DialogueProperties = {
 
 }
 
+export type RunInitializationActionFunction = (self: Dialogue, client: Client) -> ();
+export type RunCompletionActionFunction = (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
+export type VerifyConditionFunction = (self: Dialogue) -> boolean;
+
 export type DialogueMethods = {
 
   --[[
@@ -255,7 +259,7 @@ export type DialogueMethods = {
   --[[
     Checks whether the dialogue should be shown based on a user-defined function.
   ]]
-  verifyCondition: (self: Dialogue) -> boolean;
+  verifyCondition: VerifyConditionFunction;
 
   --[[
     Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
@@ -265,7 +269,7 @@ export type DialogueMethods = {
   --[[
     Runs a user-defined function that is intended to run before a message is shown, or before a redirect.
   ]]
-  runInitializationAction: (self: Dialogue, client: Client) -> ();
+  runInitializationAction: RunInitializationActionFunction;
 
   --[[
     Runs a user-defined function that is intended to run after a message is shown.
@@ -275,7 +279,7 @@ export type DialogueMethods = {
 
     This function is not intended for redirects.
   ]]
-  runCompletionAction: (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
+  runCompletionAction: RunCompletionActionFunction;
 
   --[[
     Gets the dialogue settings.
