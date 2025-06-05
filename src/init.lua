@@ -317,14 +317,36 @@ export type OptionalThemeDialogueSettings = {
 
 }
 
+export type DialogueSpeakerSettings = {
+
+  --[[
+    The speaker's name. Themes may show this name to the player during the conversation.
+    This is prioritized over the conversation speaker name.
+  ]]
+  name: string?;
+
+}
+
+export type OptionalDialogueSpeakerSettings = {
+
+  --[[
+    The speaker's name. Themes may show this name to the player during the conversation.
+    This is prioritized over the conversation speaker name.
+  ]]
+  name: string?;
+
+}
+
 export type DialogueSettings = {
   theme: ThemeDialogueSettings;
   typewriter: TypewriterDialogueSettings;
+  speaker: DialogueSpeakerSettings;
 }
 
 export type OptionalDialogueSettings = {
   theme: OptionalThemeDialogueSettings?;
   typewriter: OptionalTypewriterDialogueSettings?;
+  speaker: OptionalDialogueSpeakerSettings?;
 }
 
 export type OptionalTypewriterDialogueSettings = {
