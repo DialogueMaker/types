@@ -31,6 +31,7 @@ export type ConstructorClientSettings = {
     interactKeyGamepad: Enum.KeyCode?;
 
   }?;
+  typewriter: ClientTypewriterSettings?;
 
 }
 
@@ -110,14 +111,13 @@ export type ClientProperties = {
   ]]
   settings: ClientSettings;
 
+  dialogue: Dialogue;
+
+  conversation: Conversation;
+
 }
 
 export type ClientMethods = {
-
-  --[[
-    Gets the current dialogue that is being shown to the player.
-  ]]
-  getDialogue: (self: Client) -> Dialogue?;
 
   --[[
     Sets the current dialogue that is being shown to the player.
@@ -131,6 +131,11 @@ export type ClientMethods = {
 
   ]]
   requestPageSkip: (self: Client) -> ();
+
+  --[[
+    Destroys the GUI elements created by the client.
+  ]]
+  cleanup: (self: Client) -> ();
 
 }
 
@@ -291,6 +296,8 @@ export type DialogueMethods = {
     Runs a user-defined function that is intended to run before a message is shown, or before a redirect.
   ]]
   runInitializationAction: RunInitializationActionFunction;
+
+  runDefaultCompletionAction: RunCompletionActionFunction;
 
   --[[
     Runs a user-defined function that is intended to run after a message is shown.
