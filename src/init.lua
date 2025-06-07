@@ -6,6 +6,7 @@
 -- © 2025 Dialogue Maker Group
 
 local React = require(script.Parent.roblox_packages.react);
+local ReactRoblox = require(script.Parent.roblox_packages["react-roblox"]);
 
 -- Client
 export type ThemeComponent = React.ComponentType<ThemeProperties>;
@@ -104,6 +105,15 @@ export type OptionalClientSettings = {
   typewriter: OptionalClientTypewriterSettings?;
 };
 
+export type OptionalClientConstructorProperties = {
+  settings: ConstructorClientSettings?;
+  dialogue: Dialogue?;
+  conversation: Conversation?;
+  dialogueGUI: ScreenGui?;
+  reactRoot: ReactRoblox.RootType?;
+  continueConversationBindableFunction: BindableFunction?;
+}
+
 export type ClientProperties = {
 
   --[[
@@ -115,22 +125,22 @@ export type ClientProperties = {
 
   conversation: Conversation;
 
+  reactRoot: ReactRoblox.RootType;
+
+  dialogueGUI: ScreenGui;
+
+  continueDialogueBindableFunction: BindableFunction;
+
 }
 
 export type ClientMethods = {
 
-  --[[
-    Sets the current dialogue that is being shown to the player.
-    This will also render or re-render the theme.
-
-    You must set the conversation before setting the dialogue, as some conversations override client settings.
-  ]]
-  setDialogue: (self: Client, newDialogue: Dialogue?) -> Client;
+  clone: (self: Client, properties: OptionalClientConstructorProperties?) -> Client;
 
   --[[
 
   ]]
-  requestPageSkip: (self: Client) -> ();
+  continueConversation: (self: Client) -> ();
 
   --[[
     Destroys the GUI elements created by the client.
