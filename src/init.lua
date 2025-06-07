@@ -111,7 +111,7 @@ export type OptionalClientConstructorProperties = {
   conversation: Conversation?;
   dialogueGUI: ScreenGui?;
   reactRoot: ReactRoblox.RootType?;
-  continueConversationBindableFunction: BindableFunction?;
+  continueDialogueBindableFunction: BindableFunction?;
 }
 
 export type ClientProperties = {
@@ -140,7 +140,7 @@ export type ClientMethods = {
   --[[
 
   ]]
-  continueConversation: (self: Client) -> ();
+  continueDialogue: (self: Client) -> ();
 
   --[[
     Destroys the GUI elements created by the client.
