@@ -8,6 +8,8 @@
 local React = require(script.Parent.roblox_packages.react);
 
 -- Client
+export type ThemeComponent = React.ComponentType<ThemeProperties>;
+
 export type ConstructorClientSettings = {
 
   theme: {
@@ -32,93 +34,107 @@ export type ConstructorClientSettings = {
 
 }
 
+export type ClientThemeSettings = {
+
+  --[[
+    This is the default theme that will be used when talking with NPCs.
+    This may be overriden by the conversation or dialogue settings.
+  ]]
+  component: ThemeComponent;
+
+}
+
+export type ClientKeybindSettings = {
+
+  --[[
+    Keyboard keybind to start a conversation with a character.
+  ]]
+  interactKey: Enum.KeyCode?;
+
+  --[[
+    Gamepad keybind to start a conversation with a character.
+  ]]
+  interactKeyGamepad: Enum.KeyCode?;
+
+}
+
+export type ClientTypewriterSettings = {
+
+  soundTemplate: Sound?; 
+
+}
+
 export type ClientSettings = {
-
-  theme: {
-
-    -- This is the default theme that will be used when talking with NPCs
-    moduleScript: ModuleScript;
-
-  };
-  keybinds: {
-
-    --[[
-      Keyboard keybind to start a conversation with a character.
-    ]]
-    interactKey: Enum.KeyCode?;
-
-    --[[
-      Gamepad keybind to start a conversation with a character.
-    ]]
-    interactKeyGamepad: Enum.KeyCode?;
-
-  };
-  typewriter: {
-
-    --[[
-      The delay between each letter being typed.
-      This may be overridden by the conversation or dialogue settings.
-    ]]
-    soundTemplate: Sound?; 
-
-  };
+  theme: ClientThemeSettings;
+  keybinds: ClientKeybindSettings;
+  typewriter: ClientTypewriterSettings;
 };
+
+export type OptionalClientThemeSettings = {
+
+  -- This is the default theme that will be used when talking with NPCs
+  component: ThemeComponent?;
+
+}
+
+export type OptionalClientKeybindSettings = {
+
+  --[[
+    Keyboard keybind to start a conversation with a character.
+  ]]
+  interactKey: Enum.KeyCode?;
+
+  --[[
+    Gamepad keybind to start a conversation with a character.
+  ]]
+  interactKeyGamepad: Enum.KeyCode?;
+
+}
+
+export type OptionalClientTypewriterSettings = {
+
+  soundTemplate: Sound?;
+
+}
 
 export type OptionalClientSettings = {
-
-  general: {
-
-    -- This is the default theme that will be used when talking with NPCs
-    theme: ModuleScript?;
-
-  }?;
-  responses: {
-
-    -- Replace this with an audio ID that'll play every time a player selects a response. Replace with 0 to not play any sound.
-    clickSound: number?;
-
-  }?;
-  keybinds: {
-
-    --[[
-      Keyboard keybind to start a conversation with a character.
-    ]]
-    interactKey: Enum.KeyCode?;
-
-    --[[
-      Gamepad keybind to start a conversation with a character.
-    ]]
-    interactKeyGamepad: Enum.KeyCode?;
-
-  }?;
-  typewriter: {
-
-    --[[
-      The delay between each letter being typed.
-      This may be overridden by the conversation or dialogue settings.
-    ]]
-    soundTemplate: Sound?; 
-
-  }?;
+  theme: OptionalClientThemeSettings?;
+  keybinds: OptionalClientKeybindSettings?;
+  typewriter: OptionalClientTypewriterSettings?;
 };
 
+export type ClientProperties = {
+
+  --[[
+    The settings for the client.
+  ]]
+  settings: ClientSettings;
+
+}
+
 export type ClientMethods = {
-  cleanup: (self: Client) -> ();
+
+  --[[
+    Gets the current dialogue that is being shown to the player.
+  ]]
   getDialogue: (self: Client) -> Dialogue?;
-  setDialogue: (self: Client, newDialogue: Dialogue?) -> ();
-  renderDialogue: (self: Client) -> ();
-  continueDialogue: (self: Client) -> ();
-  getSettings: (self: Client) -> ClientSettings;
-  setSettings: (self: Client, newSettings: ClientSettings) -> ();
-  setContinueDialogueFunction: (self: Client, continueDialogueFunction: (() -> ())?) -> ();
+
+  --[[
+    Sets the current dialogue that is being shown to the player.
+    This will also render or re-render the theme.
+
+    You must set the conversation before setting the dialogue, as some conversations override client settings.
+  ]]
+  setDialogue: (self: Client, newDialogue: Dialogue?) -> Client;
+
+  --[[
+
+  ]]
+  requestPageSkip: (self: Client) -> ();
+
 }
 
-export type ClientEvents = {
-  SettingsChanged: RBXScriptSignal<ClientSettings>;
-  DialogueChanged: RBXScriptSignal;
-}
-
-export type Client = ClientMethods & ClientEvents;
+export type Client = ClientProperties & ClientMethods;
 
 -- Conversation
 export type TypewriterConversationSettings = {
@@ -151,6 +167,15 @@ export type ThemeConversationSettings = {
   moduleScript: ModuleScript?;
 }
 
+export type OptionalThemeSettings = {
+
+  --[[
+      Change this to a React element 
+  ]]
+  component: ThemeComponent?;
+
+}
+
 export type OptionalConversationSettings = {
   speaker: {
     --[[
@@ -162,7 +187,7 @@ export type OptionalConversationSettings = {
     --[[
       Change this to a theme you've added to the Themes folder in order to override default theme settings.
     ]]
-    moduleScript: ModuleScript?;
+    component: React.ReactElement?;
   }?;
   typewriter: OptionalTypewriterConversationSettings?;
 }
@@ -183,19 +208,29 @@ export type OptionalTypewriterConversationSettings = {
 
 };
 
-export type ConversationMethods = {
-  getChildren: (self: Conversation) -> {Dialogue};
-  getSettings: (self: Conversation) -> ConversationSettings;
-  setSettings: (self: Conversation, settings: ConversationSettings) -> ();
-  setChildren: (self: Conversation, newChildren: {Dialogue}) -> ();
+export type ConversationProperties = {
 
+  --[[
+    The conversation's children, which are dialogues that are linked to this conversation.
+  ]]
+  children: {Dialogue};
+
+  --[[
+    The conversation's speaker settings. 
+    These settings are over the conversation settings.
+  ]]
+  settings: ConversationSettings;
+
+}
+
+export type ConversationMethods = {
   --[[
     Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
   ]]
   findNextVerifiedDialogue: (self: Conversation) -> Dialogue?;
 };
 
-export type Conversation = ConversationMethods;
+export type Conversation = ConversationProperties & ConversationMethods;
 
 -- Dialogue
 export type Dialogue = DialogueProperties & DialogueMethods;
@@ -207,9 +242,21 @@ export type GetContentFunction = (self: Dialogue) -> Page;
 export type DialogueProperties = {
 
   --[[
-    The dialogue type.
+    The dialogue's settings.
+    These settings are over the client and conversation settings.
   ]]
-  type: "Message" | "Response";
+  settings: DialogueSettings;
+
+  --[[
+    The dialogue type.
+
+    * Messages are shown to the player and may contain text or effects.
+
+    * Responses are shown to the player and allow them to choose a response.
+
+    * Redirects are used to redirect the player to another message without showing any content.
+  ]]
+  type: "Message" | "Response" | "Redirect";
 
 }
 
@@ -217,6 +264,7 @@ export type RunInitializationActionFunction = (self: Dialogue, client: Client) -
 export type RunCompletionActionFunction = (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
 export type VerifyConditionFunction = (self: Dialogue) -> boolean;
 export type GetChildrenFunction = (self: Dialogue) -> {Dialogue};
+export type DialogueFindNextVerifiedDialogueFunction = (self: Dialogue) -> Dialogue?
 
 export type DialogueMethods = {
 
@@ -237,7 +285,7 @@ export type DialogueMethods = {
   --[[
     Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
   ]]
-  findNextVerifiedDialogue: (self: Dialogue) -> Dialogue?;
+  findNextVerifiedDialogue: DialogueFindNextVerifiedDialogueFunction;
 
   --[[
     Runs a user-defined function that is intended to run before a message is shown, or before a redirect.
@@ -255,26 +303,9 @@ export type DialogueMethods = {
   runCompletionAction: RunCompletionActionFunction;
 
   --[[
-    Gets the dialogue settings.
-  ]]
-  getSettings: (self: Dialogue) -> DialogueSettings;
-
-  --[[
-    Sets the dialogue settings.
-
-    This will overwrite any existing settings, so be sure to include all settings you want to keep.
-  ]]
-  setSettings: (self: Dialogue, newSettings: DialogueSettings) -> ();
-
-  --[[
     Gets the dialogue's children, which are dialogues that are linked to this dialogue.
   ]]
   getChildren: GetChildrenFunction;
-
-  --[[
-    Sets the dialogue's children, which are dialogues that are linked to this dialogue.
-  ]]
-  setChildren: (self: Dialogue, newChildren: {Dialogue}) -> ();
 
 }
 
@@ -410,8 +441,6 @@ export type Effect = {
 -- Theme
 export type ThemeProperties = {
   client: Client;
-  conversation: Conversation;
-  dialogue: Dialogue;
 }
 
 export type TextComponentProperties = {
