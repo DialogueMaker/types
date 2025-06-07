@@ -15,7 +15,7 @@ export type ConstructorClientSettings = {
   theme: {
 
     -- This is the default theme that will be used when talking with NPCs
-    moduleScript: ModuleScript;
+    component: ThemeComponent;
 
   };
   keybinds: {
@@ -164,7 +164,7 @@ export type ThemeConversationSettings = {
   --[[
     Change this to a theme you've added to the Themes folder in order to override default theme settings.
   ]]
-  moduleScript: ModuleScript?;
+  component: ThemeComponent?;
 }
 
 export type OptionalThemeSettings = {
@@ -312,16 +312,16 @@ export type DialogueMethods = {
 export type ThemeDialogueSettings = {
 
   --[[
-    The ModuleScript that contains the theme for this dialogue.
+    The theme component that will be used to render the dialogue.
     This is prioritized over the conversation and client themes.
   ]]
-  moduleScript: ModuleScript?;
+  component: ThemeComponent?;
 
 }
 
 export type OptionalThemeDialogueSettings = {
 
-  moduleScript: ModuleScript?;
+  component: ThemeComponent?;
 
 }
 
