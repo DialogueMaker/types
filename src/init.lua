@@ -53,6 +53,15 @@ export type ClientSettings = {
     interactKeyGamepad: Enum.KeyCode?;
 
   };
+  typewriter: {
+
+    --[[
+      The delay between each letter being typed.
+      This may be overridden by the conversation or dialogue settings.
+    ]]
+    soundTemplate: Sound?; 
+
+  };
 };
 
 export type OptionalClientSettings = {
@@ -82,6 +91,15 @@ export type OptionalClientSettings = {
     interactKeyGamepad: Enum.KeyCode?;
 
   }?;
+  typewriter: {
+
+    --[[
+      The delay between each letter being typed.
+      This may be overridden by the conversation or dialogue settings.
+    ]]
+    soundTemplate: Sound?; 
+
+  }?;
 };
 
 export type ClientMethods = {
@@ -103,23 +121,20 @@ export type ClientEvents = {
 export type Client = ClientMethods & ClientEvents;
 
 -- Conversation
-export type ClickDetectorConversationSettings = {
-  -- If true, this automatically creates a ClickDetector inside of the NPC's model. 
-  shouldAutoCreate: boolean; 
-  -- If true, the ClickDetector's parent will be nil until the dialogue is over. This hides the cursor from the player. 
-  shouldDisappearDuringConversation: boolean; 
-  -- Replace this with the location of the ClickDetector. (Ex. workspace.Model.ClickDetector) This setting will be ignored if AutomaticallyCreateClickDetector is true. 
-  instance: ClickDetector?;
-  adornee: Instance?;
+export type TypewriterConversationSettings = {
+
+  --[[
+    The delay between each letter being typed.
+    This overrides the client sound template, but this may be overridden by the dialogue settings.
+  ]]
+  soundTemplate: Sound?; 
+
 }
 
 export type ConversationSettings = {
-  clickDetector: ClickDetectorConversationSettings;
   theme: ThemeConversationSettings;
   speaker: SpeakerConversationSettings;
-  promptRegion: PromptRegionConversationSettings;
-  proximityPrompt: ProximityPromptConversationSettings;
-  speechBubble: SpeechBubbleConversationSettings;
+  typewriter: TypewriterConversationSettings;
 }
 
 export type SpeakerConversationSettings = {
@@ -149,68 +164,30 @@ export type OptionalConversationSettings = {
     ]]
     moduleScript: ModuleScript?;
   }?;
-  typewriter: {
-    -- The delay between each letter being typed. 
-    characterDelaySeconds: number?; 
-    -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
-    canPlayerSkipDelay: boolean?; 
-  }?;
-  promptRegion: {
-    -- The conversation will automatically start when the player touches this part.
-    basePart: BasePart?; 
-  }?;
-  clickDetector: {
-    -- If true, this automatically creates a ClickDetector inside of the NPC's model. 
-    shouldAutoCreate: boolean?; 
-    -- If true, the ClickDetector's parent will be nil until the dialogue is over. This hides the cursor from the player. 
-    shouldDisappearDuringConversation: boolean?; 
-    -- Replace this with the location of the ClickDetector. (Ex. workspace.Model.ClickDetector) This setting will be ignored if AutomaticallyCreateClickDetector is true. 
-    instance: ClickDetector?;
-    adornee: Instance?;
-  }?;
-  proximityPrompt: {
-    -- If true, this automatically creates a ProximityPrompt inside of the NPC's model.
-    shouldAutoCreate: boolean?; 
-    -- The location of the ProximityPrompt. (Ex. workspace.Model.ProximityPrompt) This setting will be ignored if AutoCreate is true. 
-    instance: ProximityPrompt?; 
-  }?;
-  speechBubble: {
-    -- If true, this automatically creates a BillboardGui inside of the NPC's model.
-    shouldAutoCreate: boolean?; 
-    adornee: Instance?;
-    button: GuiButton?;
-    billboardGUI: BillboardGui?;
-  }?;
+  typewriter: OptionalTypewriterConversationSettings?;
 }
 
-export type PromptRegionConversationSettings = {
-  -- The conversation will automatically start when the player touches this part.
-  basePart: BasePart?; 
-}
+export type OptionalTypewriterConversationSettings = {
 
-export type ProximityPromptConversationSettings = {
-  -- If true, this automatically creates a ProximityPrompt inside of the NPC's model.
-  shouldAutoCreate: boolean; 
-  -- The location of the ProximityPrompt. (Ex. workspace.Model.ProximityPrompt) This setting will be ignored if AutoCreate is true. 
-  instance: ProximityPrompt?; 
-}
+  -- The delay between each letter being typed. 
+  characterDelaySeconds: number?; 
 
-export type SpeechBubbleConversationSettings = {
-  -- If true, this automatically creates a BillboardGui inside of the NPC's model.
-  shouldAutoCreate: boolean; 
-  adornee: Instance?;
-  button: GuiButton?;
-  billboardGUI: BillboardGui?;
-}
+  -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
+  canPlayerSkipDelay: boolean?; 
 
-export type ConversationProperties = {
-  moduleScript: ModuleScript;
+  --[[
+    The delay between each letter being typed.
+    This overrides the client sound template, but this may be overridden by the dialogue settings.
+  ]]
+  soundTemplate: Sound?; 
+
 };
 
 export type ConversationMethods = {
   getChildren: (self: Conversation) -> {Dialogue};
   getSettings: (self: Conversation) -> ConversationSettings;
   setSettings: (self: Conversation, settings: ConversationSettings) -> ();
+  setChildren: (self: Conversation, newChildren: {Dialogue}) -> ();
 
   --[[
     Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
@@ -218,7 +195,7 @@ export type ConversationMethods = {
   findNextVerifiedDialogue: (self: Conversation) -> Dialogue?;
 };
 
-export type Conversation = ConversationProperties & ConversationMethods;
+export type Conversation = ConversationMethods;
 
 -- Dialogue
 export type Dialogue = DialogueProperties & DialogueMethods;
@@ -232,18 +209,14 @@ export type DialogueProperties = {
   --[[
     The dialogue type.
   ]]
-  type: "Message" | "Response" | "Redirect";
-
-  --[[
-    The ModuleScript that this dialogue was created from.
-  ]]
-  moduleScript: ModuleScript;
+  type: "Message" | "Response";
 
 }
 
 export type RunInitializationActionFunction = (self: Dialogue, client: Client) -> ();
 export type RunCompletionActionFunction = (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
 export type VerifyConditionFunction = (self: Dialogue) -> boolean;
+export type GetChildrenFunction = (self: Dialogue) -> {Dialogue};
 
 export type DialogueMethods = {
 
@@ -295,9 +268,13 @@ export type DialogueMethods = {
 
   --[[
     Gets the dialogue's children, which are dialogues that are linked to this dialogue.
-    This is used for redirects and responses.
   ]]
-  getChildren: (self: Dialogue) -> {Dialogue};
+  getChildren: GetChildrenFunction;
+
+  --[[
+    Sets the dialogue's children, which are dialogues that are linked to this dialogue.
+  ]]
+  setChildren: (self: Dialogue, newChildren: {Dialogue}) -> ();
 
 }
 
