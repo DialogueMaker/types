@@ -123,8 +123,6 @@ export type ClientProperties = {
 
   dialogue: Dialogue;
 
-  conversation: Conversation;
-
   reactRoot: ReactRoblox.RootType;
 
   dialogueGUI: ScreenGui;
