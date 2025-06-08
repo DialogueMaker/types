@@ -154,6 +154,12 @@ export type Client = ClientProperties & ClientMethods;
 -- Conversation
 export type TypewriterConversationSettings = {
 
+  -- The delay between each letter being typed. 
+  characterDelaySeconds: number?; 
+
+  -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
+  canPlayerSkipDelay: boolean?; 
+
   --[[
     The delay between each letter being typed.
     This overrides the client sound template, but this may be overridden by the dialogue settings.
@@ -182,10 +188,11 @@ export type ThemeConversationSettings = {
   component: ThemeComponent?;
 }
 
-export type OptionalThemeSettings = {
+export type OptionalThemeConversationSettings = {
 
   --[[
-      Change this to a React element 
+    The theme component that will be used to render the conversation.
+    This is prioritized over the client theme, but may be overridden by dialogue settings.
   ]]
   component: ThemeComponent?;
 
@@ -198,12 +205,7 @@ export type OptionalConversationSettings = {
     ]]
     name: string?;
   }?;
-  theme: {
-    --[[
-      Change this to a theme you've added to the Themes folder in order to override default theme settings.
-    ]]
-    component: React.ReactElement?;
-  }?;
+  theme: OptionalThemeConversationSettings?;
   typewriter: OptionalTypewriterConversationSettings?;
 }
 
@@ -224,6 +226,8 @@ export type OptionalTypewriterConversationSettings = {
 };
 
 export type ConversationProperties = {
+
+  type: "Conversation";
 
   --[[
     The conversation's children, which are dialogues that are linked to this conversation.
@@ -257,6 +261,11 @@ export type GetContentFunction = (self: Dialogue) -> Page;
 export type DialogueProperties = {
 
   --[[
+    The dialogue's parent.
+  ]]
+  parent: (Dialogue | Conversation)?;
+
+  --[[
     The dialogue's settings.
     These settings are over the client and conversation settings.
   ]]
@@ -275,6 +284,37 @@ export type DialogueProperties = {
 
 }
 
+export type DialogueConstructorProperties = {
+  parent: (Dialogue | Conversation)?;
+  content: (string | Effect | Page)?;
+  getContent: GetContentFunction?;
+  children: {Dialogue}?;
+  getChildren: ((self: Dialogue) -> {Dialogue})?;
+  runInitializationAction: RunInitializationActionFunction?;
+  runCompletionAction: RunCompletionActionFunction?;
+  verifyCondition: VerifyConditionFunction?;
+  settings: OptionalDialogueSettings?;
+}
+
+export type DialogueType = "Message" | "Response" | "Redirect";
+
+export type DialogueConstructorPropertiesWithType = DialogueConstructorProperties & {
+  type: DialogueType;
+}
+
+export type OptionalDialogueConstructorProperties = {
+  parent: (Dialogue | Conversation)?;
+  content: (string | Effect | Page)?;
+  getContent: GetContentFunction?;
+  children: {Dialogue}?;
+  getChildren: ((self: Dialogue) -> {Dialogue})?;
+  runInitializationAction: RunInitializationActionFunction?;
+  runCompletionAction: RunCompletionActionFunction?;
+  verifyCondition: VerifyConditionFunction?;
+  settings: OptionalDialogueSettings?;
+  type: DialogueType?;
+}
+
 export type RunInitializationActionFunction = (self: Dialogue, client: Client) -> ();
 export type RunCompletionActionFunction = (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
 export type VerifyConditionFunction = (self: Dialogue) -> boolean;
@@ -282,6 +322,12 @@ export type GetChildrenFunction = (self: Dialogue) -> {Dialogue};
 export type DialogueFindNextVerifiedDialogueFunction = (self: Dialogue) -> Dialogue?
 
 export type DialogueMethods = {
+
+  --[[
+    Clones the dialogue and returns a new dialogue.
+    This is useful for creating a new dialogue with similar settings.
+  ]]
+  clone: (self: Dialogue, newProperties: OptionalDialogueConstructorProperties?) -> Dialogue;
 
   --[[
     Gets an array of text or effects that represent the dialogue content.
@@ -323,6 +369,21 @@ export type DialogueMethods = {
     Gets the dialogue's children, which are dialogues that are linked to this dialogue.
   ]]
   getChildren: GetChildrenFunction;
+
+  --[[
+    Gets the parent of the dialogue.
+
+    Errors if there is no parent.
+  ]]
+  getParent: (self: Dialogue) -> (Dialogue | Conversation);
+
+  --[[
+    Gets the conversation that this dialogue is a part of.
+    This is a shortcut for looping through getParent and checking if the parent is a Conversation.
+    
+    Errors if there is no conversation ancestor.
+  ]]
+  getConversation: (self: Dialogue) -> Conversation;
 
 }
 
