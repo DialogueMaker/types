@@ -241,10 +241,18 @@ export type ConversationProperties = {
 }
 
 export type ConversationMethods = {
+
   --[[
     Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
   ]]
   findNextVerifiedDialogue: (self: Conversation) -> Dialogue?;
+
+  --[[
+    Attempts to get the next verified dialogue in the conversation.
+    Errors if no verified dialogue is found.
+  ]]
+  getNextVerifiedDialogue: (self: Conversation) -> Dialogue;
+
 };
 
 export type Conversation = ConversationProperties & ConversationMethods;
@@ -318,6 +326,7 @@ export type RunCompletionActionFunction = (self: Dialogue, client: Client, reque
 export type VerifyConditionFunction = (self: Dialogue) -> boolean;
 export type GetChildrenFunction = (self: Dialogue) -> {Dialogue};
 export type DialogueFindNextVerifiedDialogueFunction = (self: Dialogue) -> Dialogue?
+export type DialogueGetNextVerifiedDialogueFunction = (self: Dialogue) -> Dialogue;
 
 export type DialogueMethods = {
 
@@ -345,6 +354,12 @@ export type DialogueMethods = {
     Finds the next dialogue that should be shown to the player. This returns nil if no verified dialogue is found.
   ]]
   findNextVerifiedDialogue: DialogueFindNextVerifiedDialogueFunction;
+
+  --[[
+    Attempts to get the next verified child in the dialogue.
+    Errors if no verified dialogue is found.
+  ]]
+  getNextVerifiedDialogue: DialogueGetNextVerifiedDialogueFunction;
 
   --[[
     Runs a user-defined function that is intended to run before a message is shown, or before a redirect.
