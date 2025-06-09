@@ -32,7 +32,7 @@ export type ConstructorClientSettings = {
     interactKeyGamepad: Enum.KeyCode?;
 
   }?;
-  typewriter: ClientTypewriterSettings?;
+  typewriter: OptionalClientTypewriterSettings?;
 
 }
 
@@ -61,6 +61,21 @@ export type ClientKeybindSettings = {
 }
 
 export type ClientTypewriterSettings = {
+
+  --[[
+    The delay between each letter being typed.
+  ]] 
+  characterDelaySeconds: number;
+
+  --[[
+    If true, the player can skip the typing delay by pressing a keybind or clicking the theme.
+  ]]
+  canPlayerSkipDelay: boolean;
+
+  --[[
+    This is useful for themes that show the response while typing.
+  ]]
+  shouldShowResponseWhileTyping: boolean;
 
   soundTemplate: Sound?; 
 
@@ -95,7 +110,22 @@ export type OptionalClientKeybindSettings = {
 
 export type OptionalClientTypewriterSettings = {
 
-  soundTemplate: Sound?;
+  --[[
+    The delay between each letter being typed.
+  ]] 
+  characterDelaySeconds: number?;
+
+  --[[
+    If true, the player can skip the typing delay by pressing a keybind or clicking the theme.
+  ]]
+  canPlayerSkipDelay: boolean?;
+
+  --[[
+    This is useful for themes that show the response while typing.
+  ]]
+  shouldShowResponseWhileTyping: boolean?;
+
+  soundTemplate: Sound?; 
 
 }
 
@@ -122,6 +152,8 @@ export type ClientProperties = {
   settings: ClientSettings;
 
   dialogue: Dialogue;
+
+  conversation: Conversation;
 
   reactRoot: ReactRoblox.RootType;
 
@@ -461,17 +493,22 @@ export type TypewriterDialogueSettings = {
   --[[
     The delay between each letter being typed.
   ]] 
-  characterDelaySeconds: number;
+  characterDelaySeconds: number?;
 
   --[[
     If true, the player can skip the typing delay by pressing a keybind or clicking the theme.
   ]]
-  canPlayerSkipDelay: boolean;
+  canPlayerSkipDelay: boolean?;
 
   --[[
     This is useful for themes that show the response while typing.
   ]]
-  shouldShowResponseWhileTyping: boolean;
+  shouldShowResponseWhileTyping: boolean?;
+
+  --[[
+  
+  ]]
+  soundTemplate: Sound?;
 
 }
 
@@ -505,7 +542,9 @@ export type ExecutionProperties = {
   shouldSkip: boolean;
   continuePage: ContinuePageFunction;
   textComponent: (...any) -> React.ReactElement<any, any>;
-  textComponentProperties: any;
+  textComponentProperties: {
+    [any]: any;
+  };
   key: string;
 }
 
@@ -532,16 +571,6 @@ export type Effect = {
 -- Theme
 export type ThemeProperties = {
   client: Client;
-}
-
-export type TextComponentProperties = {
-  text: string;
-  skipPageSignal: RBXScriptSignal?;
-  letterDelay: number;
-  layoutOrder: number;
-  textSize: number;
-  onComplete: () -> ();
-  lineHeight: number;
 }
 
 return {};
