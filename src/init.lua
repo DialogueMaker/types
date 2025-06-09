@@ -296,6 +296,12 @@ export type Page = {string | Effect};
 
 export type GetContentFunction = (self: Dialogue) -> Page;
 
+export type DialogueGetChildrenFunction = (self: Dialogue) -> {Dialogue};
+
+export type DialogueConstructorContent = string | Effect | Page | GetContentFunction;
+
+export type DialogueConstructorChildren = {Dialogue} | DialogueGetChildrenFunction;
+
 export type DialogueProperties = {
 
   --[[
@@ -324,10 +330,6 @@ export type DialogueProperties = {
 
 export type DialogueConstructorProperties = {
   parent: (Dialogue | Conversation)?;
-  content: (string | Effect | Page)?;
-  getContent: GetContentFunction?;
-  children: {Dialogue}?;
-  getChildren: ((self: Dialogue) -> {Dialogue})?;
   runInitializationAction: RunInitializationActionFunction?;
   runCompletionAction: RunCompletionActionFunction?;
   verifyCondition: VerifyConditionFunction?;
