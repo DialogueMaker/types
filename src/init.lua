@@ -332,6 +332,7 @@ export type DialogueConstructorProperties = {
   parent: (Dialogue | Conversation)?;
   runInitializationAction: RunInitializationActionFunction?;
   runCompletionAction: RunCompletionActionFunction?;
+  runCleanupAction: RunCleanupActionFunction?;
   verifyCondition: VerifyConditionFunction?;
   settings: OptionalDialogueSettings?;
 }
@@ -349,6 +350,7 @@ export type OptionalDialogueConstructorProperties = {
   children: {Dialogue}?;
   getChildren: ((self: Dialogue) -> {Dialogue})?;
   runInitializationAction: RunInitializationActionFunction?;
+  runCleanupAction: RunCleanupActionFunction?;
   runCompletionAction: RunCompletionActionFunction?;
   verifyCondition: VerifyConditionFunction?;
   settings: OptionalDialogueSettings?;
@@ -356,7 +358,8 @@ export type OptionalDialogueConstructorProperties = {
 }
 
 export type RunInitializationActionFunction = (self: Dialogue, client: Client) -> ();
-export type RunCompletionActionFunction = (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
+export type RunCompletionActionFunction = (self: Dialogue, client: Client) -> ();
+export type RunCleanupActionFunction = (self: Dialogue, client: Client, requestedDialogue: Dialogue?) -> ();
 export type VerifyConditionFunction = (self: Dialogue) -> boolean;
 export type GetChildrenFunction = (self: Dialogue) -> {Dialogue};
 export type DialogueFindNextVerifiedDialogueFunction = (self: Dialogue) -> Dialogue?
@@ -400,13 +403,20 @@ export type DialogueMethods = {
   ]]
   runInitializationAction: RunInitializationActionFunction;
 
-  runDefaultCompletionAction: RunCompletionActionFunction;
+  runDefaultCleanupAction: RunCleanupActionFunction;
 
   --[[
-    Runs a user-defined function that is intended to run after a message is shown.
+    Runs a user-defined function that is intended to run before the next message is shown.
 
     Some themes may request a specific dialogue to be shown. For example, when a player chooses a response.
     Any applicable requested dialogue is passed as an argument to this function.
+
+    This function is not intended for redirects.
+  ]]
+  runCleanupAction: RunCleanupActionFunction;
+
+  --[[
+    Runs a user-defined function that is intended to run after a message is fully rendered.
 
     This function is not intended for redirects.
   ]]
