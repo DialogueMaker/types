@@ -77,8 +77,6 @@ export type ClientTypewriterSettings = {
   ]]
   shouldShowResponseWhileTyping: boolean;
 
-  soundTemplate: Sound?; 
-
 }
 
 export type ClientSettings = {
@@ -124,8 +122,6 @@ export type OptionalClientTypewriterSettings = {
     This is useful for themes that show the response while typing.
   ]]
   shouldShowResponseWhileTyping: boolean?;
-
-  soundTemplate: Sound?; 
 
 }
 
@@ -188,13 +184,12 @@ export type TypewriterConversationSettings = {
   characterDelaySeconds: number?; 
 
   -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
-  canPlayerSkipDelay: boolean?; 
+  canPlayerSkipDelay: boolean?;
 
   --[[
-    The delay between each letter being typed.
-    This overrides the client sound template, but this may be overridden by the dialogue settings.
+    This is useful for themes that show the response while typing.
   ]]
-  soundTemplate: Sound?; 
+  shouldShowResponseWhileTyping: boolean?;
 
 }
 
@@ -245,13 +240,7 @@ export type OptionalTypewriterConversationSettings = {
   characterDelaySeconds: number?; 
 
   -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
-  canPlayerSkipDelay: boolean?; 
-
-  --[[
-    The delay between each letter being typed.
-    This overrides the client sound template, but this may be overridden by the dialogue settings.
-  ]]
-  soundTemplate: Sound?; 
+  canPlayerSkipDelay: boolean?;
 
 };
 
@@ -487,9 +476,9 @@ export type DialogueSettings = {
 }
 
 export type OptionalDialogueSettings = {
+  speaker: OptionalDialogueSpeakerSettings?;
   theme: OptionalThemeDialogueSettings?;
   typewriter: OptionalTypewriterDialogueSettings?;
-  speaker: OptionalDialogueSpeakerSettings?;
 }
 
 export type OptionalTypewriterDialogueSettings = {
@@ -516,11 +505,6 @@ export type TypewriterDialogueSettings = {
     This is useful for themes that show the response while typing.
   ]]
   shouldShowResponseWhileTyping: boolean?;
-
-  --[[
-  
-  ]]
-  soundTemplate: Sound?;
 
 }
 
