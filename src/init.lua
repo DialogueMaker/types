@@ -242,6 +242,11 @@ export type OptionalTypewriterConversationSettings = {
   -- If true, the player can skip the typing delay by pressing a keybind or clicking the theme. 
   canPlayerSkipDelay: boolean?;
 
+  --[[
+    This is useful for themes that show the response while typing.
+  ]]
+  shouldShowResponseWhileTyping: boolean?;
+
 };
 
 export type ConversationProperties = {
