@@ -9,7 +9,7 @@ local React = require(script.Parent.roblox_packages.react);
 local ReactRoblox = require(script.Parent.roblox_packages["react-roblox"]);
 
 -- Client
-export type ThemeComponent = React.ComponentType<ThemeProperties>;
+export type ThemeComponent = React.ComponentType<ThemeProperties> | React.React_MemoComponent<ThemeProperties, any>;
 
 export type ConstructorClientSettings = {
 
@@ -513,25 +513,6 @@ export type TypewriterDialogueSettings = {
 
 }
 
--- DialogueContentFitter
-export type DialogueContentFitter = DialogueContentFitterProperties & DialogueContentFitterMethods;
-
-export type DialogueContentFitterMethods = {
-  getPages: (self: DialogueContentFitter, rawPage: Page) -> ({Page});
-}
-
-export type DialogueContentFitterProperties = {
-  textLabel: TextLabel;
-  contentContainer: GuiObject;
-}
-
-export type RichTextTag = {
-  attributes: string?;
-  endOffset: number?;
-  name: string;
-  startOffset: number;
-}
-
 -- Effect
 export type Bounds = {
   width: number;
@@ -542,7 +523,7 @@ export type ExecutionProperties = {
   skipPageEvent: BindableEvent?;
   shouldSkip: boolean;
   continuePage: ContinuePageFunction;
-  textComponent: (...any) -> React.ReactElement<any, any>;
+  textComponent: React.ComponentType<any> | React.React_MemoComponent<any, any>;
   textComponentProperties: {
     [any]: any;
   };
@@ -555,15 +536,11 @@ export type RunEffectFunctionReturnValue = React.ReactElement<any, any>?;
 
 export type RunEffectFunction = (self: Effect, executionProperties: ExecutionProperties) -> RunEffectFunctionReturnValue;
 
-export type FitFunction = (self: Effect, contentContainer: GuiObject, textLabel: TextLabel, pages: {Page}) -> (GuiObject, {Page});
-
 export type Effect = {
   
   type: "Effect";
   
   run: RunEffectFunction;
-
-  fit: FitFunction;
   
   name: string;
 
