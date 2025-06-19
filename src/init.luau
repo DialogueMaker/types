@@ -135,10 +135,12 @@ export type OptionalClientConstructorProperties = {
   settings: ConstructorClientSettings?;
   dialogue: Dialogue?;
   conversation: Conversation?;
-  dialogueGUI: GuiBase2d?;
+  dialogueGUI: DialogueGui?;
   reactRoot: ReactRoblox.RootType?;
   continueDialogueBindableFunction: BindableFunction?;
 }
+
+export type DialogueGui = GuiBase2d | GuiBase3d;
 
 export type ClientProperties = {
 
@@ -153,7 +155,7 @@ export type ClientProperties = {
 
   reactRoot: ReactRoblox.RootType;
 
-  dialogueGUI: GuiBase2d;
+  dialogueGUI: DialogueGui;
 
   continueDialogueBindableFunction: BindableFunction;
 
