@@ -521,14 +521,22 @@ export type Bounds = {
   height: number;
 };
 
+export type TextElementProperties = {
+  text: string;
+  layoutOrder: number?;
+  key: string;
+  onCompleted: ContinuePageFunction;
+}
+
+export type CreateTextElementFunction = (TextElementProperties) -> React.ReactNode;
+
 export type ExecutionProperties = {
-  skipPageEvent: BindableEvent?;
+  client: Client;
+  skipPageSignal: RBXScriptSignal;
   shouldSkip: boolean;
-  continuePage: ContinuePageFunction;
-  textComponent: React.ComponentType<any> | React.React_MemoComponent<any, any>;
-  textComponentProperties: {
-    [any]: any;
-  };
+  onCompleted: ContinuePageFunction;
+  layoutOrder: number?;
+  createTextElement: CreateTextElementFunction;
   key: string;
 }
 
